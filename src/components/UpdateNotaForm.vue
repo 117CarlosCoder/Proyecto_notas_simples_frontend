@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import axios from "axios";
+import apiClient from "@/config/axios";
 
 interface Nota {
   codigo_nota: number | string;
@@ -92,15 +92,11 @@ const onSubmit = async () => {
   if (!(form.value as any)?.validate?.()) return;
 
   try {
-    const token = localStorage.getItem("jwt");
+    //const token = localStorage.getItem("jwt");
     const id = props.nota.codigo_nota;
     const payload = { titulo: titulo.value, descripcion: descripcion.value };
 
-    const response = await axios.patch(
-      `http://localhost:3000/notas/${id}`,
-      payload,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const response = await apiClient.patch(`/notas/${id}`, payload);
 
     const notaActualizada = response?.data ?? { ...props.nota, ...payload };
     emit("nota-actualizada", notaActualizada);

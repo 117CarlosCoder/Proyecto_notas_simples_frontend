@@ -54,7 +54,9 @@
                 </DeleteNotaButton>
               </div>
               <h2 class="text-h6">{{ nota.titulo }}</h2>
-              <p>{{ nota.descripcion }}</p>
+              <br></br>
+              <p style="white-space: pre-wrap;">{{ nota.descripcion }}</p>
+              <br></br>
               <small>Creada: {{ formatDate(nota.fecha_creacion) }}</small>
             </v-card>
           </v-col>
@@ -66,7 +68,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import apiClient from "@/config/axios";
+
 import { useRouter } from "vue-router";
 import UpdateNotaForm from "../../../components/UpdateNotaForm.vue";
 import NewNotaForm from "../../../components/NewNotaForm.vue";
@@ -85,10 +88,8 @@ const router = useRouter();
 
 const fetchNotas = async () => {
   try {
-    const token = localStorage.getItem("jwt");
-    const response = await axios.get("http://localhost:3000/notas/user", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    //const token = localStorage.getItem("jwt");
+    const response = await  apiClient.get(`/notas/user`);
     if (Array.isArray(response.data) && response.data.length > 0) {
       notas.value = response.data;
     } else {

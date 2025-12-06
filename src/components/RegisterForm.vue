@@ -113,7 +113,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import axios from "axios";
+import apiClient from "@/config/axios";
 
 const dialog = ref(false);
 
@@ -134,18 +134,13 @@ const handleRegister = async () => {
   }
 
   try {
-    const response = await axios.post(
-      "http://localhost:3000/auth/register",
-      {
-        nombre: name.value,
+
+     const { data } = await apiClient.post('/auth/register', {
+      nombre: name.value,
         nombre_usuario: username.value,
         correo: email.value,
         contrasenia: password.value,
-      },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    });
 
     dialog.value = true;
     emit("register-success");

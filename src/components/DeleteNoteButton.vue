@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import axios from "axios";
+import apiClient from "@/config/axios";
 
 const props = defineProps<{
   notaId: number | string;
@@ -64,12 +64,7 @@ const confirm = async () => {
   if (loading.value) return;
   loading.value = true;
   try {
-    const token = localStorage.getItem("jwt");
-    const base = props.apiBase ?? "http://localhost:3000";
-    await axios.delete(`${base}/notas/${props.notaId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
+    await apiClient.delete(`/notas/${props.notaId}`);
     emit("nota-eliminada", props.notaId);
     open.value = false;
   } catch (err) {

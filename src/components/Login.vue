@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
+import apiClient from "@/config/axios";
 
 const visible = ref(false);
 const username = ref("");
@@ -75,18 +75,12 @@ const emit = defineEmits(["login-success", "go-register"]);
 
 const handleLogin = async () => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/auth/login",
-      {
-        nombre_usuario: username.value,
-        contrasenia: password.value,
-      },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const token = response.data.token;
-    localStorage.setItem("jwt", token);
+    const { data } = await apiClient.post('/auth/login', {
+      nombre_usuario: username.value,
+      contrasenia: password.value,
+    });
+
+    localStorage.setItem("jwt", data.token);
     emit("login-success");
   } catch (err) {
     console.error("Error de login:", err);

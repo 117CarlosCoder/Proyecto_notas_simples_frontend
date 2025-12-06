@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import axios from "axios";
+import apiClient from "@/config/axios";
 
 const emit = defineEmits(["nota-creada"]);
 
@@ -69,12 +69,11 @@ const submit = async () => {
   if (!(form.value as any)?.validate?.()) return;
 
   try {
-    const token = localStorage.getItem("jwt");
-    await axios.post(
-      "http://localhost:3000/notas",
-      { titulo: titulo.value, descripcion: descripcion.value },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    //const token = localStorage.getItem("jwt");
+    const { data } = await apiClient.post('/notas', {
+      titulo: titulo.value,
+      descripcion: descripcion.value,
+    });
     close();
     emit("nota-creada");
   } catch (err) {
